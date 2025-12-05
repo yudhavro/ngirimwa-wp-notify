@@ -1,0 +1,116 @@
+# Copyright (C) 2024 Yudhavro
+# This file is distributed under the same license as the APIvro WP Notify plugin.
+msgid ""
+msgstr ""
+"Project-Id-Version: APIvro WP Notify 2.0.0\n"
+"Report-Msgid-Bugs-To: https://yudhavro.com\n"
+"POT-Creation-Date: 2024-01-01 12:00+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: includes/class-apivro-wp-notify-admin.php:60
+msgid "APIvro WP Notify Settings"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:61
+msgid "APIvro WP Notify"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:117
+msgid "Configuration"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:124
+msgid "API Key"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:132
+msgid "WA Numbers / Group IDs"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:140
+msgid "Body Text"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:148
+msgid "Footer Text"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:156
+msgid "Delay"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:174
+msgid "Configure your APIvro API settings below. After saving, notifications will be sent automatically when a post is published."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:186
+msgid "Enter your APIvro API Key"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:190
+msgid "Current key: "
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:194
+msgid "Enter your APIvro API Key. You can get your API key from your APIvro dashboard."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:213
+msgid "628123456789,123456789289524319@g.us"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:215
+msgid "Enter WhatsApp numbers or Group IDs, separated by commas (without spaces). Each recipient will receive the notification. Example: 628123456789,123456789289524319@g.us"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:231
+msgid "Use Excerpt"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:240
+msgid "Custom"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:249
+msgid "Enter custom body text that will appear before the post link. This text will be used for all notifications. Leave empty to disable. Example: Baca selengkapnya 👇👇"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:263
+msgid "Enter custom footer text that will appear after the post link. Leave empty to disable. You can use line breaks - they will be preserved in the WhatsApp message."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:279
+msgid "Smart Delay"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:288
+msgid "Custom"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:299
+msgid "seconds"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:301
+msgid "Enter delay in seconds between each message send. Recommended: 2-5 seconds to avoid being banned."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:304
+msgid "Smart Delay: Random delay between 2-5 seconds. Custom: Fixed delay as specified."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:297
+msgid "Settings saved successfully."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:333
+msgid "Save Settings"
+msgstr ""
+
