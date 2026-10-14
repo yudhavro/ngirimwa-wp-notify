@@ -1,106 +1,78 @@
-=== APIvro WP Notify ===
+=== NgirimWA WP Notify ===
 Contributors: yudhavro
-Tags: whatsapp, notification, apivro, messaging, automation
+Tags: whatsapp, notification, whatsapp channel, ngirimwa, automation
 Requires at least: 5.0
-Tested up to: 6.4
+Tested up to: 7.1
 Requires PHP: 7.4
-Stable tag: 2.0.0
+Stable tag: 3.0.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Automatically send WhatsApp notifications via APIvro when a post is published.
+Send a WhatsApp notification through NgirimWA to numbers, groups, and WhatsApp Channels when a post is published.
 
 == Description ==
 
-APIvro WP Notify is a WordPress plugin that automatically sends WhatsApp notifications to your contacts or groups when you publish a new post. The plugin uses the APIvro API to deliver messages directly to WhatsApp.
+NgirimWA WP Notify sends your new posts to WhatsApp automatically: to personal numbers, WhatsApp groups, and WhatsApp Channels managed by your NgirimWA device.
 
-== Features ==
-
-* Automatically sends WhatsApp notifications when posts are published
-* Supports both personal WhatsApp numbers and group IDs
-* Multiple recipients support (comma-separated, without spaces)
-* Smart delay system to prevent WhatsApp account bans
-* Customizable body text (excerpt or custom text)
-* Customizable footer text with line break support
-* Secure API key storage using WordPress options API
-* API key masking for security
-* Background processing for large recipient lists
-* Easy-to-use admin settings page
-* Built following WordPress coding standards
-* Compatible with WordPress 5.0+ and PHP 7.4+
-* Non-blocking design to avoid slowing down website
+* Recipients: numbers, group IDs (…@g.us), channel IDs (…@newsletter)
+* Optional featured image
+* Excerpt, custom text, or title + link only, plus a footer
+* Background sending (WP-Cron) with a delay between recipients
+* Temporary errors are retried; permanent errors pause sending and show an admin notice
+* Check Connection, Load My Channels, and Send Test tools
+* Recent Activity log
+* English and Indonesian
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/apivro-wp-notify` directory, or install the plugin through the WordPress plugins screen directly.
-2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Go to Settings > APIvro WP Notify to configure your API key and recipients.
-4. Enter your APIvro API Key and WhatsApp numbers/group IDs.
-5. Optionally, add custom footer text for your messages.
+1. Upload the plugin to `/wp-content/plugins/apivro-wp-notify` or install the zip from Plugins → Add New → Upload.
+2. Activate the plugin.
+3. Go to Settings → NgirimWA WP Notify, enter your API Key and recipients, then save.
+4. Click Check Connection. For channels, click Load My Channels and add the channel to the recipients.
 
 == Frequently Asked Questions ==
 
-= How do I get my APIvro API Key? =
+= Where do I get the API Key? =
 
-You can get your API Key from your APIvro dashboard at https://api.yudhavro.com
+In the NgirimWA dashboard (dash.ngirimwa.com) → Devices → API Keys. Messages are sent from the device linked to the key.
 
-= How do I find my WhatsApp Group ID? =
+= How do I post to a WhatsApp Channel? =
 
-Group IDs can be obtained from your APIvro dashboard or by checking your APIvro account settings.
+Your plan must be Pro or Enterprise and the device number must be the owner or an admin of the channel. Click "Load My Channels" on the settings page and add the channel ID. Each channel post counts as 1 message.
 
-= Can I send to multiple recipients? =
+= Why does it say "paused"? =
 
-Yes, you can add multiple WhatsApp numbers or group IDs, separated by commas without spaces. Example: 6285361405924,120363280289524319
+NgirimWA rejected the request for a reason that retrying cannot fix: the API Key was deleted or deactivated, the WhatsApp device logged out, the subscription is inactive, or the monthly quota is used up. Fix the cause, then click Check Connection or save the settings to resume.
 
-= Can I customize the message format? =
+= Notifications arrive late on my site =
 
-The message includes the post title, excerpt, and permalink. You can add custom footer text in the settings page. Line breaks in the footer text will be preserved in the WhatsApp message.
+Sending runs on WP-Cron, which runs when the site gets visits. Add a server cron job that requests wp-cron.php every minute.
 
 == Changelog ==
 
+= 3.0.0 =
+* New: post to WhatsApp Channels (…@newsletter), with a "Load My Channels" tool.
+* New: send the featured image with the notification.
+* New: "Title and link only" body option.
+* New: Check Connection and Send Test tools, Recent Activity log.
+* Changed: messages are sent in the background with WP-Cron; publishing no longer waits (no more sleep in the publish request).
+* Changed: permanent errors (invalid/deleted API key, device logged out, quota used up, inactive subscription) pause sending with an admin notice instead of retrying.
+* Changed: temporary errors are retried up to 3 times, honoring Retry-After.
+* Changed: requests carry an Idempotency-Key and ref_id WP-<post ID>.
+* Changed: the API key is no longer stored in scheduled cron events.
+* Changed: recipients can be separated by commas or new lines; duplicates are removed.
+* Added uninstall cleanup and Settings link on the Plugins screen.
+
+= 2.1.0 =
+* NgirimWA branding and API endpoint.
+
 = 2.0.0 =
-* Complete plugin restructure following WordPress standards
-* Added admin settings page with WordPress Settings API
-* Added API Key configuration with masking
-* Added multiple recipients support
-* Added smart delay system (2-5 seconds random) to prevent bans
-* Added custom delay option
-* Added customizable body text (excerpt or custom)
-* Added customizable footer text with line break support
-* Improved code organization with class-based structure
-* Enhanced security with proper sanitization and validation
-* Improved performance with background processing
-* Enhanced error handling and logging
-* Updated to use transition_post_status hook for better compatibility
-* Replaced cURL with wp_remote_post for better WordPress integration
-* Added filter for custom post types support
-* Improved compatibility with WordPress 5.0+ and future versions
+* Admin settings page, multiple recipients, delays, custom body and footer.
 
 = 1.0.0 =
-* Initial release
+* Initial release.
 
 == Upgrade Notice ==
 
-= 2.0.0 =
-Major update: Complete restructure with admin dashboard. Please configure your API key and recipients in Settings > APIvro WP Notify after updating.
-
-== Screenshots ==
-
-1. Admin settings page for configuring API key, recipients, and footer text
-
-== Developer Notes ==
-
-This plugin follows WordPress coding standards and best practices. The plugin uses:
-* WordPress Settings API for secure option storage
-* Singleton pattern for main plugin class
-* Proper sanitization and validation of user input
-* Nonce verification for form security
-* API key masking for security
-* wp_remote_post for HTTP requests (WordPress native)
-* Background processing with wp_schedule_single_event
-* Filter hooks for extensibility (apivro_wp_notify_post_types)
-* Full internationalization support (i18n) with Indonesian and English translations
-* Automatic language detection based on WordPress locale settings
-* WP_DEBUG aware logging
-* No blocking operations on frontend
-
+= 3.0.0 =
+Adds WhatsApp Channel support and stops retrying requests that cannot succeed. After updating, open the settings page and click Check Connection.

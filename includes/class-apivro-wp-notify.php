@@ -1,6 +1,16 @@
 <?php
 /**
- * Main plugin class
+ * Main plugin class.
+ *
+ * Flow: a post is published → one WP-Cron event per recipient is scheduled (spaced by the
+ * configured delay) → each event sends one message through the NgirimWA API. Nothing is sent
+ * inside the publish request, so publishing never waits on WhatsApp.
+ *
+ * Errors:
+ *  - temporary (network, rate limit, device briefly offline, 5xx) → retried up to MAX_ATTEMPTS;
+ *  - permanent (invalid/inactive API key, device logged out, quota exhausted, plan) → sending is
+ *    PAUSED and an admin notice explains how to fix it. Paused sends are not retried, so a broken
+ *    setup never floods the NgirimWA API.
  *
  * @package NgirimWA_WP_Notify
  */
@@ -11,10 +21,21 @@ if (!defined('ABSPATH')) {
 
 class APIvro_WP_Notify {
 
+    const SEND_HOOK = 'apivro_wp_notify_send_one';
+    const LEGACY_HOOK = 'apivro_wp_notify_send_scheduled_message';
+    const MAX_ATTEMPTS = 3;
+    const LOG_OPTION = 'apivro_wp_notify_log';
+    const LOG_MAX = 50;
+    const PAUSE_OPTION = 'apivro_wp_notify_paused';
+
     private static $instance = null;
 
     private function __construct() {
-        $this->init_hooks();
+        add_action('transition_post_status', array($this, 'handle_post_status_transition'), 10, 3);
+        add_action(self::SEND_HOOK, array($this, 'send_one'), 10, 3);
+        // Events scheduled by version 2.x (they carry the API key + message). Delivered once with the
+        // current settings, then gone.
+        add_action(self::LEGACY_HOOK, array($this, 'send_legacy'), 10, 4);
     }
 
     public static function get_instance() {
@@ -24,192 +45,206 @@ class APIvro_WP_Notify {
         return self::$instance;
     }
 
-    private function init_hooks() {
-        add_action('transition_post_status', array($this, 'handle_post_status_transition'), 10, 3);
-        add_action('apivro_wp_notify_send_scheduled_message', array($this, 'send_scheduled_message'), 10, 4);
-    }
-
-    public function send_scheduled_message($post_id, $api_key, $to, $message) {
-        $this->send_message($api_key, $to, $message);
-    }
-
     public function handle_post_status_transition($new_status, $old_status, $post) {
         if ($new_status !== 'publish' || $old_status === 'publish') {
             return;
         }
-
-        if (!is_object($post)) {
-            $post = get_post($post);
-        }
-
-        if (!$post) {
+        $post = get_post($post);
+        if (!$post || wp_is_post_revision($post->ID) || wp_is_post_autosave($post->ID)) {
             return;
         }
-
         $allowed_post_types = apply_filters('apivro_wp_notify_post_types', array('post'));
         if (!in_array($post->post_type, $allowed_post_types, true)) {
             return;
         }
-
-        $this->send_notification($post->ID);
+        if (!apply_filters('apivro_wp_notify_should_send', true, $post)) {
+            return;
+        }
+        $this->queue_post($post->ID);
     }
 
-    public function send_notification($post_id) {
-        if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) {
-            return;
-        }
-
+    /** Schedule one send per recipient. Returns the number of scheduled sends. */
+    public function queue_post($post_id) {
         if (get_post_meta($post_id, '_apivro_wp_notify_sent', true)) {
-            return;
+            return 0;
+        }
+        $recipients = self::parse_recipients(get_option('apivro_wp_notify_recipients', ''));
+        if (empty($recipients) || get_option('apivro_wp_notify_api_key', '') === '') {
+            return 0;
+        }
+        if (self::paused()) {
+            self::log($post_id, '-', 'skipped', __('Sending is paused. Fix the problem shown in the settings page.', 'apivro-wp-notify'));
+            return 0;
         }
 
+        // Mark first so a second publish hook (e.g. block editor + REST) never queues twice.
+        update_post_meta($post_id, '_apivro_wp_notify_sent', current_time('mysql'));
+        update_post_meta($post_id, '_apivro_wp_notify_sent_count', 0);
+
+        $at = time() + 5;
+        foreach (array_values($recipients) as $index => $recipient) {
+            if ($index > 0) {
+                $at += $this->delay_seconds();
+            }
+            wp_schedule_single_event($at, self::SEND_HOOK, array((int) $post_id, $recipient, 1));
+        }
+        spawn_cron();
+        return count($recipients);
+    }
+
+    public function send_one($post_id, $recipient, $attempt = 1) {
         $post = get_post($post_id);
         if (!$post || $post->post_status !== 'publish') {
             return;
         }
-
-        $api_key = get_option('apivro_wp_notify_api_key', '');
-        $recipients = get_option('apivro_wp_notify_recipients', '');
-
-        if (empty($api_key) || empty($recipients)) {
+        if (self::paused()) {
+            self::log($post_id, $recipient, 'skipped', __('Sending is paused.', 'apivro-wp-notify'));
             return;
         }
 
+        $api = new APIvro_WP_Notify_API(get_option('apivro_wp_notify_api_key', ''));
+        $result = $api->send(
+            $recipient,
+            $this->build_message($post),
+            $this->image_url($post),
+            'wpnotify-' . md5(home_url() . '|' . $post->ID . '|' . $recipient),
+            'WP-' . $post->ID
+        );
+
+        if ($result['ok']) {
+            $count = (int) get_post_meta($post->ID, '_apivro_wp_notify_sent_count', true);
+            update_post_meta($post->ID, '_apivro_wp_notify_sent_count', $count + 1);
+            self::log($post->ID, $recipient, 'sent', __('Accepted by NgirimWA.', 'apivro-wp-notify'));
+            return;
+        }
+
+        if (APIvro_WP_Notify_API::should_pause($result)) {
+            self::pause($result);
+            self::log($post->ID, $recipient, 'paused', self::describe($result));
+            return;
+        }
+
+        $attempt = max(1, (int) $attempt);
+        if (APIvro_WP_Notify_API::should_retry($result) && $attempt < self::MAX_ATTEMPTS) {
+            $wait = max($result['retry_after'], 120 * $attempt);
+            wp_schedule_single_event(time() + $wait, self::SEND_HOOK, array((int) $post->ID, $recipient, $attempt + 1));
+            self::log($post->ID, $recipient, 'retry', sprintf(
+                /* translators: 1: error, 2: minutes */
+                __('%1$s — retrying in %2$d minute(s).', 'apivro-wp-notify'),
+                self::describe($result),
+                (int) ceil($wait / 60)
+            ));
+            return;
+        }
+
+        self::log($post->ID, $recipient, 'failed', self::describe($result));
+    }
+
+    /** Version 2.x event: ignore the stored key/message, resend with current settings (no retry chain). */
+    public function send_legacy($post_id, $api_key, $to, $message) {
+        $this->send_one($post_id, $to, self::MAX_ATTEMPTS);
+    }
+
+    public function build_message($post) {
         $body_text_type = get_option('apivro_wp_notify_body_text_type', 'excerpt');
         $body_text_custom = get_option('apivro_wp_notify_body_text_custom', '');
         $footer_text = get_option('apivro_wp_notify_footer_text', '');
-        $delay_type = get_option('apivro_wp_notify_delay_type', 'smart');
-        $delay_custom = absint(get_option('apivro_wp_notify_delay_custom', 3));
 
-        $permalink = esc_url_raw(get_permalink($post_id));
-        $post_title = sanitize_text_field($post->post_title);
+        $title = html_entity_decode(wp_strip_all_tags(get_the_title($post)), ENT_QUOTES, 'UTF-8');
+        $message = '*' . $title . "*\n\n";
 
-        $message = "*{$post_title}*\n\n";
-
-        if ($body_text_type === 'custom' && !empty($body_text_custom)) {
-            $body_text = str_replace(array("\r\n", "\r"), "\n", $body_text_custom);
-            $message .= "{$body_text}\n";
+        if ($body_text_type === 'custom' && $body_text_custom !== '') {
+            $message .= str_replace(array("\r\n", "\r"), "\n", $body_text_custom) . "\n";
         } elseif ($body_text_type === 'excerpt') {
-            $excerpt = get_the_excerpt($post_id);
-            if (!empty($excerpt)) {
-                $message .= sanitize_text_field($excerpt) . "\n";
+            $excerpt = html_entity_decode(wp_strip_all_tags(get_the_excerpt($post)), ENT_QUOTES, 'UTF-8');
+            if ($excerpt !== '') {
+                $message .= $excerpt . "\n";
             }
         }
 
-        $message .= "{$permalink}\n\n\n";
+        $message .= esc_url_raw(get_permalink($post)) . "\n";
 
-        if (!empty($footer_text)) {
-            $footer_text = str_replace(array("\r\n", "\r"), "\n", $footer_text);
-            $message .= $footer_text;
+        if ($footer_text !== '') {
+            $message .= "\n" . str_replace(array("\r\n", "\r"), "\n", $footer_text);
         }
 
-        $recipient_array = $this->parse_recipients($recipients);
-        if (empty($recipient_array)) {
-            return;
-        }
-
-        $this->send_messages_async($post_id, $api_key, $recipient_array, $message, $delay_type, $delay_custom);
+        return apply_filters('apivro_wp_notify_message', $message, $post);
     }
 
-    private function send_messages_async($post_id, $api_key, $recipients, $message, $delay_type, $delay_custom) {
-        $total_recipients = count($recipients);
-        $sent_count = 0;
-
-        foreach ($recipients as $index => $to) {
-            $to = trim($to);
-            if (empty($to)) {
-                continue;
-            }
-
-            if ($index > 0) {
-                $delay = $this->calculate_delay($delay_type, $delay_custom);
-                if ($delay > 0 && $delay <= 10) {
-                    sleep($delay);
-                } elseif ($delay > 10) {
-                    wp_schedule_single_event(
-                        time() + $delay,
-                        'apivro_wp_notify_send_scheduled_message',
-                        array($post_id, $api_key, $to, $message)
-                    );
-                    continue;
-                }
-            }
-
-            if ($this->send_message($api_key, $to, $message)) {
-                $sent_count++;
-            }
+    private function image_url($post) {
+        if (get_option('apivro_wp_notify_include_image', '0') !== '1') {
+            return null;
         }
-
-        update_post_meta($post_id, '_apivro_wp_notify_sent', current_time('mysql'));
-        update_post_meta($post_id, '_apivro_wp_notify_sent_count', $sent_count);
+        $url = get_the_post_thumbnail_url($post, 'large');
+        return ($url && strpos($url, 'https://') === 0) ? $url : null;
     }
 
-    private function calculate_delay($delay_type, $delay_custom) {
-        if ($delay_type === 'smart') {
-            return rand(2, 5);
-        } else {
-            return max(1, absint($delay_custom));
+    private function delay_seconds() {
+        if (get_option('apivro_wp_notify_delay_type', 'smart') === 'custom') {
+            return max(1, min(300, absint(get_option('apivro_wp_notify_delay_custom', 3))));
         }
+        return wp_rand(3, 8);
     }
 
-    private function parse_recipients($recipients) {
-        if (empty($recipients)) {
-            return array();
-        }
-
-        $recipients = preg_replace('/\s*,\s*/', ',', $recipients);
-        $recipient_list = explode(',', $recipients);
-        return array_filter(array_map('trim', $recipient_list));
+    /** Comma or newline separated list → unique, trimmed recipients. */
+    public static function parse_recipients($recipients) {
+        $list = preg_split('/[\s,;]+/', (string) $recipients);
+        $list = array_filter(array_map('trim', $list), 'strlen');
+        return array_values(array_unique($list));
     }
 
-    private function send_message($api_key, $to, $message) {
-        if (empty($api_key) || empty($to) || empty($message)) {
-            return false;
+    // ── Pause & log ─────────────────────────────────────────────────────────────
+
+    public static function paused() {
+        $paused = get_option(self::PAUSE_OPTION);
+        return is_array($paused) ? $paused : null;
+    }
+
+    public static function pause($result) {
+        update_option(self::PAUSE_OPTION, array(
+            'code'    => $result['code'],
+            'message' => self::describe($result),
+            'time'    => current_time('mysql'),
+        ), false);
+    }
+
+    public static function resume() {
+        delete_option(self::PAUSE_OPTION);
+    }
+
+    public static function log($post_id, $recipient, $status, $detail) {
+        $log = get_option(self::LOG_OPTION, array());
+        if (!is_array($log)) {
+            $log = array();
         }
+        array_unshift($log, array(
+            'time'      => current_time('mysql'),
+            'post_id'   => (int) $post_id,
+            'recipient' => (string) $recipient,
+            'status'    => (string) $status,
+            'detail'    => wp_strip_all_tags((string) $detail),
+        ));
+        update_option(self::LOG_OPTION, array_slice($log, 0, self::LOG_MAX), false);
+    }
 
-        $url = 'https://dash.ngirimwa.com/api/v1/messages/send';
-        $to = sanitize_text_field($to);
-
-        $body = array(
-            'to' => $to,
-            'message' => $message,
+    /** Human readable explanation of an API result. */
+    public static function describe($result) {
+        $known = array(
+            'api_key_missing'       => __('API Key is not set.', 'apivro-wp-notify'),
+            'invalid_api_key'       => __('API Key is invalid or was deleted. Create a new key in the NgirimWA dashboard.', 'apivro-wp-notify'),
+            'api_key_inactive'      => __('API Key is inactive. Activate it in the NgirimWA dashboard.', 'apivro-wp-notify'),
+            'subscription_inactive' => __('Your NgirimWA subscription is not active.', 'apivro-wp-notify'),
+            'account_suspended'     => __('Your NgirimWA account is suspended. Contact support.', 'apivro-wp-notify'),
+            'device_logged_out'     => __('The WhatsApp device is logged out. Scan the QR code again in the NgirimWA dashboard.', 'apivro-wp-notify'),
+            'device_required'       => __('This API Key has no device. Create the key from a device in the NgirimWA dashboard.', 'apivro-wp-notify'),
+            'quota_exceeded'        => __('Monthly message quota is used up.', 'apivro-wp-notify'),
+            'plan_feature_required' => __('Posting to WhatsApp Channel needs the Pro or Enterprise plan.', 'apivro-wp-notify'),
+            'channel_not_found'     => __('Channel not found. The device number must be the owner or an admin of the channel.', 'apivro-wp-notify'),
+            'device_not_connected'  => __('The WhatsApp device is temporarily disconnected.', 'apivro-wp-notify'),
+            'rate_limited'          => __('Too many requests. NgirimWA asked to slow down.', 'apivro-wp-notify'),
+            'network_error'         => __('Could not reach NgirimWA.', 'apivro-wp-notify'),
         );
-
-        $args = array(
-            'timeout' => 30,
-            'headers' => array(
-                'x-api-key' => sanitize_text_field($api_key),
-                'Content-Type' => 'application/json',
-            ),
-            'body' => wp_json_encode($body),
-            'data_format' => 'body',
-        );
-
-        $response = wp_remote_post($url, $args);
-
-        if (is_wp_error($response)) {
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('NgirimWA WP Notify Error: ' . $response->get_error_message());
-            }
-            return false;
-        }
-
-        $http_code = wp_remote_retrieve_response_code($response);
-        $response_body = wp_remote_retrieve_body($response);
-        $response_data = json_decode($response_body, true);
-
-        if ($http_code === 200 && isset($response_data['success']) && $response_data['success']) {
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                $message_id = isset($response_data['message_id']['id']) ? $response_data['message_id']['id'] : 'N/A';
-                error_log('NgirimWA WP Notify: Message sent successfully to ' . esc_html($to) . '. Message ID: ' . esc_html($message_id));
-            }
-            return true;
-        } else {
-            if (defined('WP_DEBUG') && WP_DEBUG) {
-                error_log('NgirimWA WP Notify: Failed to send to ' . esc_html($to) . '. Response: ' . esc_html($response_body));
-            }
-            return false;
-        }
+        $text = isset($known[$result['code']]) ? $known[$result['code']] : ($result['message'] !== '' ? $result['message'] : $result['code']);
+        return $result['code'] === 'network_error' && $result['message'] !== '' ? $text . ' (' . $result['message'] . ')' : $text;
     }
 }
-

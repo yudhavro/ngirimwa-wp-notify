@@ -1,116 +1,332 @@
-# Copyright (C) 2024 Yudhavro
-# This file is distributed under the same license as the APIvro WP Notify plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: APIvro WP Notify 2.0.0\n"
-"Report-Msgid-Bugs-To: https://yudhavro.com\n"
-"POT-Creation-Date: 2024-01-01 12:00+0000\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Project-Id-Version: NgirimWA WP Notify 3.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/yudhavro\n"
 "Language: \n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: apivro-wp-notify\n"
 
-#: includes/class-apivro-wp-notify-admin.php:60
-msgid "APIvro WP Notify Settings"
+#: includes/class-apivro-wp-notify-admin.php:31
+msgid "Settings"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:61
-msgid "APIvro WP Notify"
+#: includes/class-apivro-wp-notify-admin.php:58
+msgid "Added"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:117
+#: includes/class-apivro-wp-notify-admin.php:67
+msgid "NgirimWA WP Notify Settings"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:68
+msgid "NgirimWA WP Notify"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:87
 msgid "Configuration"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:124
+#: includes/class-apivro-wp-notify-admin.php:88
 msgid "API Key"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:132
-msgid "WA Numbers / Group IDs"
+#: includes/class-apivro-wp-notify-admin.php:89
+msgid "Recipients"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:140
+#: includes/class-apivro-wp-notify-admin.php:90
+msgid "Featured Image"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:91
 msgid "Body Text"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:148
+#: includes/class-apivro-wp-notify-admin.php:92
 msgid "Footer Text"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:156
+#: includes/class-apivro-wp-notify-admin.php:93
 msgid "Delay"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:174
-msgid "Configure your APIvro API settings below. After saving, notifications will be sent automatically when a post is published."
+#: includes/class-apivro-wp-notify-admin.php:128
+msgid "NgirimWA WP Notify is paused:"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:186
-msgid "Enter your APIvro API Key"
+#: includes/class-apivro-wp-notify-admin.php:131
+msgid "Open settings"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:190
-msgid "Current key: "
+#: includes/class-apivro-wp-notify-admin.php:141
+msgid "You are not allowed to do this."
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:194
-msgid "Enter your APIvro API Key. You can get your API key from your APIvro dashboard."
+#: includes/class-apivro-wp-notify-admin.php:156
+#, php-format
+msgid "Connected. WhatsApp device %s is ready."
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:213
-msgid "628123456789,123456789289524319@g.us"
+#: includes/class-apivro-wp-notify-admin.php:159
+#, php-format
+msgid "API Key is valid, but the device status is \"%s\". Reconnect it in the NgirimWA dashboard."
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:215
-msgid "Enter WhatsApp numbers or Group IDs, separated by commas (without spaces). Each recipient will receive the notification. Example: 628123456789,123456789289524319@g.us"
+#: includes/class-apivro-wp-notify-admin.php:178
+msgid "Channels managed by your device:"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:231
-msgid "Use Excerpt"
+#: includes/class-apivro-wp-notify-admin.php:178
+msgid "This device does not own or manage any channel yet."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:192
+msgid "Add at least one recipient and save the settings first."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:198
+#, php-format
+msgid "Test notification from %s via NgirimWA WP Notify."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:207
+msgid "accepted"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:208 includes/class-apivro-wp-notify.php:117
+msgid "Accepted by NgirimWA."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:229
+msgid "Notifications are sent automatically in the background when a post is published."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:236
+msgid "Enter your NgirimWA API Key"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:238
+msgid "Current key:"
 msgstr ""
 
 #: includes/class-apivro-wp-notify-admin.php:240
+msgid "Get it from the NgirimWA dashboard (dash.ngirimwa.com) → Devices → API Keys. Messages are sent from the device linked to this key."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:257
+msgid "Separate with commas or new lines. WhatsApp number: 628123456789 · Group: …@g.us · Channel: …@newsletter (use \"Load My Channels\" below)."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:260
+msgid "Channel posts need the Pro or Enterprise plan, and the device number must be the owner or an admin of the channel. Each post counts as 1 message."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:271
+msgid "Send the featured image with the message (the text becomes the caption)"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:273
+msgid "The image must be publicly reachable over HTTPS."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:282
+msgid "Use Excerpt"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:283 includes/class-apivro-wp-notify-admin.php:307
 msgid "Custom"
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:249
-msgid "Enter custom body text that will appear before the post link. This text will be used for all notifications. Leave empty to disable. Example: Baca selengkapnya 👇👇"
-msgstr ""
-
-#: includes/class-apivro-wp-notify-admin.php:263
-msgid "Enter custom footer text that will appear after the post link. Leave empty to disable. You can use line breaks - they will be preserved in the WhatsApp message."
-msgstr ""
-
-#: includes/class-apivro-wp-notify-admin.php:279
-msgid "Smart Delay"
+#: includes/class-apivro-wp-notify-admin.php:284
+msgid "Title and link only"
 msgstr ""
 
 #: includes/class-apivro-wp-notify-admin.php:288
-msgid "Custom"
-msgstr ""
-
-#: includes/class-apivro-wp-notify-admin.php:299
-msgid "seconds"
-msgstr ""
-
-#: includes/class-apivro-wp-notify-admin.php:301
-msgid "Enter delay in seconds between each message send. Recommended: 2-5 seconds to avoid being banned."
-msgstr ""
-
-#: includes/class-apivro-wp-notify-admin.php:304
-msgid "Smart Delay: Random delay between 2-5 seconds. Custom: Fixed delay as specified."
+msgid "Shown before the post link. Example: Baca selengkapnya 👇"
 msgstr ""
 
 #: includes/class-apivro-wp-notify-admin.php:297
-msgid "Settings saved successfully."
+msgid "Shown after the post link. Line breaks are kept. Leave empty to disable."
 msgstr ""
 
-#: includes/class-apivro-wp-notify-admin.php:333
+#: includes/class-apivro-wp-notify-admin.php:306
+msgid "Smart Delay (random 3–8 seconds)"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:311
+msgid "seconds"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:313
+msgid "Gap between recipients. Sending runs in the background (WP-Cron), so publishing is never slowed down."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:339
+msgid "Channel"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:339
+msgid "Channel ID"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:343
+msgid "Add to Recipients"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:345
+msgid "Click \"Add to Recipients\", then Save Settings."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:353
+msgid "Sent"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:354
+msgid "Test"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:355
+msgid "Retrying"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:356
+msgid "Failed"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:357
+msgid "Paused"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:358
+msgid "Skipped"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:361
+msgid "Recent Activity"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:363
+msgid "Nothing sent yet."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:368
+msgid "Time"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:369
+msgid "Post"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:370
+msgid "Recipient"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:371
+msgid "Status"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:372
+msgid "Detail"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:394
+msgid "Settings saved."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:406
 msgid "Save Settings"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:410
+msgid "Tools"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:411
+msgid "Save the settings before using these tools."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:413
+msgid "Check Connection"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:414
+msgid "Load My Channels"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-admin.php:415
+msgid "Send Test"
+msgstr ""
+
+#: includes/class-apivro-wp-notify-api.php:133 includes/class-apivro-wp-notify.php:233
+msgid "API Key is not set."
+msgstr ""
+
+#: includes/class-apivro-wp-notify-api.php:166
+#, php-format
+msgid "Unexpected response from NgirimWA (HTTP %d)."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:76
+msgid "Sending is paused. Fix the problem shown in the settings page."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:101
+msgid "Sending is paused."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:133
+#, php-format
+msgid "%1$s — retrying in %2$d minute(s)."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:234
+msgid "API Key is invalid or was deleted. Create a new key in the NgirimWA dashboard."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:235
+msgid "API Key is inactive. Activate it in the NgirimWA dashboard."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:236
+msgid "Your NgirimWA subscription is not active."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:237
+msgid "Your NgirimWA account is suspended. Contact support."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:238
+msgid "The WhatsApp device is logged out. Scan the QR code again in the NgirimWA dashboard."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:239
+msgid "This API Key has no device. Create the key from a device in the NgirimWA dashboard."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:240
+msgid "Monthly message quota is used up."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:241
+msgid "Posting to WhatsApp Channel needs the Pro or Enterprise plan."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:242
+msgid "Channel not found. The device number must be the owner or an admin of the channel."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:243
+msgid "The WhatsApp device is temporarily disconnected."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:244
+msgid "Too many requests. NgirimWA asked to slow down."
+msgstr ""
+
+#: includes/class-apivro-wp-notify.php:245
+msgid "Could not reach NgirimWA."
 msgstr ""
 

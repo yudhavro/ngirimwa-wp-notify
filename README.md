@@ -1,233 +1,65 @@
 # NgirimWA WP Notify
 
-A WordPress plugin that automatically sends WhatsApp notifications via NgirimWA when a post is published.
+WordPress plugin that sends a WhatsApp notification through [NgirimWA](https://ngirimwa.com) when a post is published — to WhatsApp numbers, groups, and **WhatsApp Channels**.
 
 ## Features
 
-- ✅ Automatically sends WhatsApp notifications when posts are published
-- ✅ Supports both personal WhatsApp numbers and group IDs
-- ✅ Multiple recipients support (comma-separated)
-- ✅ Smart delay system to prevent WhatsApp account bans
-- ✅ Customizable body text (excerpt or custom)
-- ✅ Customizable footer text
-- ✅ Secure API key storage
-- ✅ Background processing for performance
-- ✅ WordPress coding standards compliant
-- ✅ Compatible with WordPress 5.0+ and PHP 7.4+
+- Recipients: numbers (`628123456789`), groups (`…@g.us`), and channels (`…@newsletter`)
+- Optional featured image (the text becomes the caption)
+- Body: excerpt, custom text, or title + link only; custom footer
+- Background sending with WP-Cron and a delay between recipients — publishing is never slowed down
+- Safe error handling:
+  - temporary errors (network, rate limit, device briefly offline) are retried up to 3 times
+  - permanent errors (invalid/deleted API key, device logged out, quota used up) **pause** sending and show an admin notice, so a broken setup never floods the API
+- Tools: Check Connection, Load My Channels (one click to add a channel ID), Send Test
+- Recent Activity log (last 50 sends)
+- Idempotent requests (`Idempotency-Key`), so a retried request is never sent twice
+- English and Indonesian
 
-## Security
+## Requirements
 
-- ✅ API key stored securely using WordPress Options API
-- ✅ API key masking in admin interface
-- ✅ Proper sanitization and validation of all inputs
-- ✅ Nonce verification for form submissions
-- ✅ Capability checks for admin access
-- ✅ No data exposed to frontend
-
-## Performance
-
-- ✅ Non-blocking design
-- ✅ Background processing for large recipient lists
-- ✅ Uses WordPress native HTTP API (wp_remote_post)
-- ✅ Optimized delay system (smart delay: 2-5 seconds)
-- ✅ Scheduled events for delays > 10 seconds
-
-## Compatibility
-
-- ✅ WordPress 6.0+ compatible
-- ✅ PHP 8.0+ required
-- ✅ Uses transition_post_status hook (modern approach)
-- ✅ Filter hooks for extensibility
-- ✅ No conflicts with other plugins (unique prefixes)
+- WordPress 5.0+ and PHP 7.4+
+- A NgirimWA API Key (dash.ngirimwa.com → Devices → API Keys)
+- Channel posts: Pro or Enterprise plan, and the device number must be the owner or an admin of the channel
 
 ## Installation
 
-1. Download or clone this repository
-2. Upload to `/wp-content/plugins/apivro-wp-notify/`
-3. Activate the plugin through WordPress admin
-4. Configure in Settings > NgirimWA WP Notify
+1. Upload the folder to `/wp-content/plugins/apivro-wp-notify/` (or install the zip from Plugins → Add New → Upload).
+2. Activate the plugin.
+3. Open **Settings → NgirimWA WP Notify**, enter the API Key and recipients, then **Save Settings**.
+4. Click **Check Connection**. For channels, click **Load My Channels** and **Add to Recipients**.
 
-## Configuration
+Sending runs on WP-Cron, which is triggered by site visits. On sites with very little traffic, set up a real cron job that calls `wp-cron.php` every minute.
 
-1. Enter your NgirimWA API Key
-2. Add WhatsApp numbers/Group IDs (comma-separated, no spaces)
-3. Configure body text (excerpt or custom)
-4. Set footer text (optional)
-5. Configure delay (smart or custom)
-
-## Developer Hooks
-
-### Filters
-
-#### `apivro_wp_notify_post_types`
-Allow custom post types to trigger notifications.
+## Developer hooks
 
 ```php
-add_filter('apivro_wp_notify_post_types', function($post_types) {
-    $post_types[] = 'custom_post_type';
-    return $post_types;
+// Post types that trigger a notification (default: post).
+add_filter('apivro_wp_notify_post_types', function ($types) {
+    $types[] = 'product';
+    return $types;
 });
+
+// Skip a specific post.
+add_filter('apivro_wp_notify_should_send', function ($send, $post) {
+    return has_category('internal', $post) ? false : $send;
+}, 10, 2);
+
+// Change the message text.
+add_filter('apivro_wp_notify_message', function ($message, $post) {
+    return $message . "\n#" . get_bloginfo('name');
+}, 10, 2);
 ```
 
-## File Structure
+## API endpoints used
 
-```
-apivro-wp-notify/
-├── apivro-wp-notify.php          # Main plugin file
-├── readme.txt                     # WordPress.org readme
-├── README.md                      # Developer documentation
-├── LICENSE                        # GPL v2 License
-├── .gitignore                     # Git ignore file
-└── includes/
-    ├── class-apivro-wp-notify.php        # Main plugin class
-    └── class-apivro-wp-notify-admin.php  # Admin settings class
-```
-
-## Security Best Practices
-
-- API keys are stored in WordPress database using Options API
-- All user inputs are sanitized and validated
-- Nonce verification prevents CSRF attacks
-- Capability checks ensure only authorized users can configure
-- API key is masked in admin interface
-- No sensitive data exposed in frontend
-
-## Performance Considerations
-
-- Uses wp_remote_post (WordPress native HTTP API)
-- Background processing for delays > 10 seconds
-- Non-blocking design
-- Only runs on post publish (not on every page load)
-- Efficient database queries
-
-## Contributing
-
-Contributions are welcome! Please follow WordPress coding standards.
+| Recipient | Endpoint |
+| --- | --- |
+| Number / group | `POST /api/v1/messages/send` |
+| Channel | `POST /api/v1/channels/posts` |
+| Check Connection | `GET /api/v1/devices/status` |
+| Load My Channels | `GET /api/v1/channels` |
 
 ## License
 
-GPL v2 or later
-
-## Author
-
-Yudhavro - https://yudhavro.com
-
-## Support
-
-For issues and feature requests, please open an issue on GitHub.
-
-
-## Features
-
-- ✅ Automatically sends WhatsApp notifications when posts are published
-- ✅ Supports both personal WhatsApp numbers and group IDs
-- ✅ Multiple recipients support (comma-separated)
-- ✅ Smart delay system to prevent WhatsApp account bans
-- ✅ Customizable body text (excerpt or custom)
-- ✅ Customizable footer text
-- ✅ Secure API key storage
-- ✅ Background processing for performance
-- ✅ WordPress coding standards compliant
-- ✅ Compatible with WordPress 5.0+ and PHP 7.4+
-
-## Security
-
-- ✅ API key stored securely using WordPress Options API
-- ✅ API key masking in admin interface
-- ✅ Proper sanitization and validation of all inputs
-- ✅ Nonce verification for form submissions
-- ✅ Capability checks for admin access
-- ✅ No data exposed to frontend
-
-## Performance
-
-- ✅ Non-blocking design
-- ✅ Background processing for large recipient lists
-- ✅ Uses WordPress native HTTP API (wp_remote_post)
-- ✅ Optimized delay system (smart delay: 2-5 seconds)
-- ✅ Scheduled events for delays > 10 seconds
-
-## Compatibility
-
-- ✅ WordPress 5.0+ compatible
-- ✅ PHP 7.4+ required
-- ✅ Uses transition_post_status hook (modern approach)
-- ✅ Filter hooks for extensibility
-- ✅ No conflicts with other plugins (unique prefixes)
-
-## Installation
-
-1. Download or clone this repository
-2. Upload to `/wp-content/plugins/apivro-wp-notify/`
-3. Activate the plugin through WordPress admin
-4. Configure in Settings > APIvro WP Notify
-
-## Configuration
-
-1. Enter your APIvro API Key
-2. Add WhatsApp numbers/Group IDs (comma-separated, no spaces)
-3. Configure body text (excerpt or custom)
-4. Set footer text (optional)
-5. Configure delay (smart or custom)
-
-## Developer Hooks
-
-### Filters
-
-#### `apivro_wp_notify_post_types`
-Allow custom post types to trigger notifications.
-
-```php
-add_filter('apivro_wp_notify_post_types', function($post_types) {
-    $post_types[] = 'custom_post_type';
-    return $post_types;
-});
-```
-
-## File Structure
-
-```
-apivro-wp-notify/
-├── apivro-wp-notify.php          # Main plugin file
-├── readme.txt                     # WordPress.org readme
-├── README.md                      # Developer documentation
-├── LICENSE                        # GPL v2 License
-├── .gitignore                     # Git ignore file
-└── includes/
-    ├── class-apivro-wp-notify.php        # Main plugin class
-    └── class-apivro-wp-notify-admin.php  # Admin settings class
-```
-
-## Security Best Practices
-
-- API keys are stored in WordPress database using Options API
-- All user inputs are sanitized and validated
-- Nonce verification prevents CSRF attacks
-- Capability checks ensure only authorized users can configure
-- API key is masked in admin interface
-- No sensitive data exposed in frontend
-
-## Performance Considerations
-
-- Uses wp_remote_post (WordPress native HTTP API)
-- Background processing for delays > 10 seconds
-- Non-blocking design
-- Only runs on post publish (not on every page load)
-- Efficient database queries
-
-## Contributing
-
-Contributions are welcome! Please follow WordPress coding standards.
-
-## License
-
-GPL v2 or later
-
-## Author
-
-Yudhavro - https://yudhavro.com
-
-## Support
-
-For issues and feature requests, please open an issue on GitHub.
-
+GPL v2 or later.

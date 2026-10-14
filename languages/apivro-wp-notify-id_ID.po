@@ -1,118 +1,332 @@
-# Indonesian translation for APIvro WP Notify
-# Copyright (C) 2024 Yudhavro
-# This file is distributed under the same license as the APIvro WP Notify plugin.
 msgid ""
 msgstr ""
-"Project-Id-Version: APIvro WP Notify 2.0.0\n"
-"Report-Msgid-Bugs-To: https://yudhavro.com\n"
-"POT-Creation-Date: 2024-01-01 12:00+0000\n"
-"PO-Revision-Date: 2024-01-01 12:00+0000\n"
-"Last-Translator: Yudhavro <info@yudhavro.com>\n"
-"Language-Team: Indonesian\n"
+"Project-Id-Version: NgirimWA WP Notify 3.0.0\n"
+"Report-Msgid-Bugs-To: https://github.com/yudhavro\n"
 "Language: id_ID\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"X-Generator: Poedit 3.0\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Domain: apivro-wp-notify\n"
 
-#: includes/class-apivro-wp-notify-admin.php:60
-msgid "APIvro WP Notify Settings"
-msgstr "Pengaturan APIvro WP Notify"
+#: includes/class-apivro-wp-notify-admin.php:31
+msgid "Settings"
+msgstr "Pengaturan"
 
-#: includes/class-apivro-wp-notify-admin.php:61
-msgid "APIvro WP Notify"
-msgstr "APIvro WP Notify"
+#: includes/class-apivro-wp-notify-admin.php:58
+msgid "Added"
+msgstr "Ditambahkan"
 
-#: includes/class-apivro-wp-notify-admin.php:117
+#: includes/class-apivro-wp-notify-admin.php:67
+msgid "NgirimWA WP Notify Settings"
+msgstr "Pengaturan NgirimWA WP Notify"
+
+#: includes/class-apivro-wp-notify-admin.php:68
+msgid "NgirimWA WP Notify"
+msgstr "NgirimWA WP Notify"
+
+#: includes/class-apivro-wp-notify-admin.php:87
 msgid "Configuration"
 msgstr "Konfigurasi"
 
-#: includes/class-apivro-wp-notify-admin.php:124
+#: includes/class-apivro-wp-notify-admin.php:88
 msgid "API Key"
-msgstr "Kunci API"
+msgstr "API Key"
 
-#: includes/class-apivro-wp-notify-admin.php:132
-msgid "WA Numbers / Group IDs"
-msgstr "Nomor WA / ID Grup"
+#: includes/class-apivro-wp-notify-admin.php:89
+msgid "Recipients"
+msgstr "Penerima"
 
-#: includes/class-apivro-wp-notify-admin.php:140
+#: includes/class-apivro-wp-notify-admin.php:90
+msgid "Featured Image"
+msgstr "Gambar Unggulan"
+
+#: includes/class-apivro-wp-notify-admin.php:91
 msgid "Body Text"
-msgstr "Teks Body"
+msgstr "Isi Pesan"
 
-#: includes/class-apivro-wp-notify-admin.php:148
+#: includes/class-apivro-wp-notify-admin.php:92
 msgid "Footer Text"
-msgstr "Teks Footer"
+msgstr "Teks Penutup"
+
+#: includes/class-apivro-wp-notify-admin.php:93
+msgid "Delay"
+msgstr "Jeda"
+
+#: includes/class-apivro-wp-notify-admin.php:128
+msgid "NgirimWA WP Notify is paused:"
+msgstr "NgirimWA WP Notify dijeda:"
+
+#: includes/class-apivro-wp-notify-admin.php:131
+msgid "Open settings"
+msgstr "Buka pengaturan"
+
+#: includes/class-apivro-wp-notify-admin.php:141
+msgid "You are not allowed to do this."
+msgstr "Anda tidak punya akses untuk tindakan ini."
 
 #: includes/class-apivro-wp-notify-admin.php:156
-msgid "Delay"
-msgstr "Tunda"
+#, php-format
+msgid "Connected. WhatsApp device %s is ready."
+msgstr "Terhubung. Perangkat WhatsApp %s siap mengirim."
 
-#: includes/class-apivro-wp-notify-admin.php:174
-msgid "Configure your APIvro API settings below. After saving, notifications will be sent automatically when a post is published."
-msgstr "Konfigurasikan pengaturan API APIvro Anda di bawah ini. Setelah disimpan, notifikasi akan dikirim otomatis ketika postingan diterbitkan."
+#: includes/class-apivro-wp-notify-admin.php:159
+#, php-format
+msgid "API Key is valid, but the device status is \"%s\". Reconnect it in the NgirimWA dashboard."
+msgstr "API Key valid, tetapi status perangkat \"%s\". Hubungkan ulang di dashboard NgirimWA."
 
-#: includes/class-apivro-wp-notify-admin.php:186
-msgid "Enter your APIvro API Key"
-msgstr "Masukkan Kunci API APIvro Anda"
+#: includes/class-apivro-wp-notify-admin.php:178
+msgid "Channels managed by your device:"
+msgstr "Channel yang dikelola perangkat Anda:"
 
-#: includes/class-apivro-wp-notify-admin.php:190
-msgid "Current key: "
-msgstr "Kunci saat ini: "
+#: includes/class-apivro-wp-notify-admin.php:178
+msgid "This device does not own or manage any channel yet."
+msgstr "Perangkat ini belum memiliki atau menjadi admin channel mana pun."
 
-#: includes/class-apivro-wp-notify-admin.php:194
-msgid "Enter your APIvro API Key. You can get your API key from your APIvro dashboard."
-msgstr "Masukkan Kunci API APIvro Anda. Anda dapat memperoleh kunci API dari dashboard APIvro Anda."
+#: includes/class-apivro-wp-notify-admin.php:192
+msgid "Add at least one recipient and save the settings first."
+msgstr "Isi minimal satu penerima lalu simpan pengaturan dulu."
 
-#: includes/class-apivro-wp-notify-admin.php:213
-msgid "628123456789,123456789289524319@g.us"
-msgstr "628123456789,123456789289524319@g.us"
+#: includes/class-apivro-wp-notify-admin.php:198
+#, php-format
+msgid "Test notification from %s via NgirimWA WP Notify."
+msgstr "Notifikasi uji dari %s lewat NgirimWA WP Notify."
 
-#: includes/class-apivro-wp-notify-admin.php:215
-msgid "Enter WhatsApp numbers or Group IDs, separated by commas (without spaces). Each recipient will receive the notification. Example: 628123456789,123456789289524319@g.us"
-msgstr "Masukkan nomor WhatsApp atau ID Grup, dipisahkan dengan koma (tanpa spasi). Setiap penerima akan menerima notifikasi. Contoh: 628123456789,123456789289524319@g.us"
+#: includes/class-apivro-wp-notify-admin.php:207
+msgid "accepted"
+msgstr "diterima"
 
-#: includes/class-apivro-wp-notify-admin.php:231
-msgid "Use Excerpt"
-msgstr "Gunakan Ringkasan"
+#: includes/class-apivro-wp-notify-admin.php:208 includes/class-apivro-wp-notify.php:117
+msgid "Accepted by NgirimWA."
+msgstr "Diterima NgirimWA."
+
+#: includes/class-apivro-wp-notify-admin.php:229
+msgid "Notifications are sent automatically in the background when a post is published."
+msgstr "Notifikasi dikirim otomatis di latar belakang saat artikel diterbitkan."
+
+#: includes/class-apivro-wp-notify-admin.php:236
+msgid "Enter your NgirimWA API Key"
+msgstr "Masukkan API Key NgirimWA"
+
+#: includes/class-apivro-wp-notify-admin.php:238
+msgid "Current key:"
+msgstr "Key saat ini:"
 
 #: includes/class-apivro-wp-notify-admin.php:240
+msgid "Get it from the NgirimWA dashboard (dash.ngirimwa.com) → Devices → API Keys. Messages are sent from the device linked to this key."
+msgstr "Ambil di dashboard NgirimWA (dash.ngirimwa.com) → Perangkat → Kunci API. Pesan dikirim dari perangkat yang terhubung dengan key ini."
+
+#: includes/class-apivro-wp-notify-admin.php:257
+msgid "Separate with commas or new lines. WhatsApp number: 628123456789 · Group: …@g.us · Channel: …@newsletter (use \"Load My Channels\" below)."
+msgstr "Pisahkan dengan koma atau baris baru. Nomor WhatsApp: 628123456789 · Grup: …@g.us · Channel: …@newsletter (pakai \"Ambil Daftar Channel\" di bawah)."
+
+#: includes/class-apivro-wp-notify-admin.php:260
+msgid "Channel posts need the Pro or Enterprise plan, and the device number must be the owner or an admin of the channel. Each post counts as 1 message."
+msgstr "Posting ke channel butuh paket Pro atau Enterprise, dan nomor perangkat harus pemilik atau admin channel. Setiap postingan dihitung 1 pesan."
+
+#: includes/class-apivro-wp-notify-admin.php:271
+msgid "Send the featured image with the message (the text becomes the caption)"
+msgstr "Kirim gambar unggulan bersama pesan (teks menjadi caption)"
+
+#: includes/class-apivro-wp-notify-admin.php:273
+msgid "The image must be publicly reachable over HTTPS."
+msgstr "Gambar harus bisa diakses publik lewat HTTPS."
+
+#: includes/class-apivro-wp-notify-admin.php:282
+msgid "Use Excerpt"
+msgstr "Pakai Ringkasan"
+
+#: includes/class-apivro-wp-notify-admin.php:283 includes/class-apivro-wp-notify-admin.php:307
 msgid "Custom"
 msgstr "Kustom"
 
-#: includes/class-apivro-wp-notify-admin.php:249
-msgid "Enter custom body text that will appear before the post link. This text will be used for all notifications. Leave empty to disable. Example: Baca selengkapnya 👇👇"
-msgstr "Masukkan teks body kustom yang akan muncul sebelum link postingan. Teks ini akan digunakan untuk semua notifikasi. Kosongkan untuk menonaktifkan. Contoh: Baca selengkapnya 👇👇"
-
-#: includes/class-apivro-wp-notify-admin.php:263
-msgid "Enter custom footer text that will appear after the post link. Leave empty to disable. You can use line breaks - they will be preserved in the WhatsApp message."
-msgstr "Masukkan teks footer kustom yang akan muncul setelah link postingan. Kosongkan untuk menonaktifkan. Anda dapat menggunakan baris baru - mereka akan dipertahankan dalam pesan WhatsApp."
-
-#: includes/class-apivro-wp-notify-admin.php:279
-msgid "Smart Delay"
-msgstr "Tunda Cerdas"
+#: includes/class-apivro-wp-notify-admin.php:284
+msgid "Title and link only"
+msgstr "Judul dan tautan saja"
 
 #: includes/class-apivro-wp-notify-admin.php:288
-msgid "Custom"
-msgstr "Kustom"
+msgid "Shown before the post link. Example: Baca selengkapnya 👇"
+msgstr "Tampil sebelum tautan artikel. Contoh: Baca selengkapnya 👇"
 
-#: includes/class-apivro-wp-notify-admin.php:299
+#: includes/class-apivro-wp-notify-admin.php:297
+msgid "Shown after the post link. Line breaks are kept. Leave empty to disable."
+msgstr "Tampil setelah tautan artikel. Baris baru dipertahankan. Kosongkan untuk menonaktifkan."
+
+#: includes/class-apivro-wp-notify-admin.php:306
+msgid "Smart Delay (random 3–8 seconds)"
+msgstr "Jeda Pintar (acak 3–8 detik)"
+
+#: includes/class-apivro-wp-notify-admin.php:311
 msgid "seconds"
 msgstr "detik"
 
-#: includes/class-apivro-wp-notify-admin.php:301
-msgid "Enter delay in seconds between each message send. Recommended: 2-5 seconds to avoid being banned."
-msgstr "Masukkan tunda dalam detik antara setiap pengiriman pesan. Direkomendasikan: 2-5 detik untuk menghindari banned."
+#: includes/class-apivro-wp-notify-admin.php:313
+msgid "Gap between recipients. Sending runs in the background (WP-Cron), so publishing is never slowed down."
+msgstr "Jarak antar penerima. Pengiriman berjalan di latar belakang (WP-Cron), jadi menerbitkan artikel tidak melambat."
 
-#: includes/class-apivro-wp-notify-admin.php:304
-msgid "Smart Delay: Random delay between 2-5 seconds. Custom: Fixed delay as specified."
-msgstr "Tunda Cerdas: Tunda acak antara 2-5 detik. Kustom: Tunda tetap sesuai yang ditentukan."
+#: includes/class-apivro-wp-notify-admin.php:339
+msgid "Channel"
+msgstr "Channel"
 
-#: includes/class-apivro-wp-notify-admin.php:297
-msgid "Settings saved successfully."
-msgstr "Pengaturan berhasil disimpan."
+#: includes/class-apivro-wp-notify-admin.php:339
+msgid "Channel ID"
+msgstr "ID Channel"
 
-#: includes/class-apivro-wp-notify-admin.php:333
+#: includes/class-apivro-wp-notify-admin.php:343
+msgid "Add to Recipients"
+msgstr "Tambah ke Penerima"
+
+#: includes/class-apivro-wp-notify-admin.php:345
+msgid "Click \"Add to Recipients\", then Save Settings."
+msgstr "Klik \"Tambah ke Penerima\", lalu Simpan Pengaturan."
+
+#: includes/class-apivro-wp-notify-admin.php:353
+msgid "Sent"
+msgstr "Terkirim"
+
+#: includes/class-apivro-wp-notify-admin.php:354
+msgid "Test"
+msgstr "Uji"
+
+#: includes/class-apivro-wp-notify-admin.php:355
+msgid "Retrying"
+msgstr "Dicoba Ulang"
+
+#: includes/class-apivro-wp-notify-admin.php:356
+msgid "Failed"
+msgstr "Gagal"
+
+#: includes/class-apivro-wp-notify-admin.php:357
+msgid "Paused"
+msgstr "Dijeda"
+
+#: includes/class-apivro-wp-notify-admin.php:358
+msgid "Skipped"
+msgstr "Dilewati"
+
+#: includes/class-apivro-wp-notify-admin.php:361
+msgid "Recent Activity"
+msgstr "Aktivitas Terakhir"
+
+#: includes/class-apivro-wp-notify-admin.php:363
+msgid "Nothing sent yet."
+msgstr "Belum ada pengiriman."
+
+#: includes/class-apivro-wp-notify-admin.php:368
+msgid "Time"
+msgstr "Waktu"
+
+#: includes/class-apivro-wp-notify-admin.php:369
+msgid "Post"
+msgstr "Artikel"
+
+#: includes/class-apivro-wp-notify-admin.php:370
+msgid "Recipient"
+msgstr "Penerima"
+
+#: includes/class-apivro-wp-notify-admin.php:371
+msgid "Status"
+msgstr "Status"
+
+#: includes/class-apivro-wp-notify-admin.php:372
+msgid "Detail"
+msgstr "Keterangan"
+
+#: includes/class-apivro-wp-notify-admin.php:394
+msgid "Settings saved."
+msgstr "Pengaturan tersimpan."
+
+#: includes/class-apivro-wp-notify-admin.php:406
 msgid "Save Settings"
 msgstr "Simpan Pengaturan"
+
+#: includes/class-apivro-wp-notify-admin.php:410
+msgid "Tools"
+msgstr "Alat"
+
+#: includes/class-apivro-wp-notify-admin.php:411
+msgid "Save the settings before using these tools."
+msgstr "Simpan pengaturan sebelum memakai alat berikut."
+
+#: includes/class-apivro-wp-notify-admin.php:413
+msgid "Check Connection"
+msgstr "Cek Koneksi"
+
+#: includes/class-apivro-wp-notify-admin.php:414
+msgid "Load My Channels"
+msgstr "Ambil Daftar Channel"
+
+#: includes/class-apivro-wp-notify-admin.php:415
+msgid "Send Test"
+msgstr "Kirim Uji"
+
+#: includes/class-apivro-wp-notify-api.php:133 includes/class-apivro-wp-notify.php:233
+msgid "API Key is not set."
+msgstr "API Key belum diisi."
+
+#: includes/class-apivro-wp-notify-api.php:166
+#, php-format
+msgid "Unexpected response from NgirimWA (HTTP %d)."
+msgstr "Respons tidak terduga dari NgirimWA (HTTP %d)."
+
+#: includes/class-apivro-wp-notify.php:76
+msgid "Sending is paused. Fix the problem shown in the settings page."
+msgstr "Pengiriman dijeda. Perbaiki masalah yang tampil di halaman pengaturan."
+
+#: includes/class-apivro-wp-notify.php:101
+msgid "Sending is paused."
+msgstr "Pengiriman dijeda."
+
+#: includes/class-apivro-wp-notify.php:133
+#, php-format
+msgid "%1$s — retrying in %2$d minute(s)."
+msgstr "%1$s — dicoba lagi dalam %2$d menit."
+
+#: includes/class-apivro-wp-notify.php:234
+msgid "API Key is invalid or was deleted. Create a new key in the NgirimWA dashboard."
+msgstr "API Key tidak valid atau sudah dihapus. Buat key baru di dashboard NgirimWA."
+
+#: includes/class-apivro-wp-notify.php:235
+msgid "API Key is inactive. Activate it in the NgirimWA dashboard."
+msgstr "API Key nonaktif. Aktifkan di dashboard NgirimWA."
+
+#: includes/class-apivro-wp-notify.php:236
+msgid "Your NgirimWA subscription is not active."
+msgstr "Langganan NgirimWA Anda tidak aktif."
+
+#: includes/class-apivro-wp-notify.php:237
+msgid "Your NgirimWA account is suspended. Contact support."
+msgstr "Akun NgirimWA Anda ditangguhkan. Hubungi support."
+
+#: includes/class-apivro-wp-notify.php:238
+msgid "The WhatsApp device is logged out. Scan the QR code again in the NgirimWA dashboard."
+msgstr "Perangkat WhatsApp sudah keluar. Scan ulang QR di dashboard NgirimWA."
+
+#: includes/class-apivro-wp-notify.php:239
+msgid "This API Key has no device. Create the key from a device in the NgirimWA dashboard."
+msgstr "API Key ini tidak terhubung ke perangkat. Buat key dari perangkat di dashboard NgirimWA."
+
+#: includes/class-apivro-wp-notify.php:240
+msgid "Monthly message quota is used up."
+msgstr "Kuota pesan bulan ini habis."
+
+#: includes/class-apivro-wp-notify.php:241
+msgid "Posting to WhatsApp Channel needs the Pro or Enterprise plan."
+msgstr "Posting ke Channel WhatsApp butuh paket Pro atau Enterprise."
+
+#: includes/class-apivro-wp-notify.php:242
+msgid "Channel not found. The device number must be the owner or an admin of the channel."
+msgstr "Channel tidak ditemukan. Nomor perangkat harus pemilik atau admin channel."
+
+#: includes/class-apivro-wp-notify.php:243
+msgid "The WhatsApp device is temporarily disconnected."
+msgstr "Perangkat WhatsApp sedang terputus sementara."
+
+#: includes/class-apivro-wp-notify.php:244
+msgid "Too many requests. NgirimWA asked to slow down."
+msgstr "Terlalu banyak permintaan. NgirimWA meminta jeda."
+
+#: includes/class-apivro-wp-notify.php:245
+msgid "Could not reach NgirimWA."
+msgstr "Tidak bisa menghubungi NgirimWA."
 
